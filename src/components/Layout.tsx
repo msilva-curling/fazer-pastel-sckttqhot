@@ -1,13 +1,24 @@
-/* Layout Component - A component that wraps the main content of the app
-   - Use this file to add a header, footer, or other elements that should be present on every page
-   - This component is used in the App.tsx file to wrap the main content of the app */
-
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
 export default function Layout() {
   return (
-    <main className="flex flex-col min-h-screen">
-      <Outlet />
-    </main>
+    <div className="flex flex-col min-h-screen bg-background font-sans">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-card shadow-header h-14 md:h-[72px] flex items-center justify-center">
+        <Link
+          to="/"
+          className="text-h3-mobile md:text-h2-desktop font-display text-foreground transition-transform duration-200 ease-in-out hover:scale-102"
+        >
+          Receita de Pastel
+        </Link>
+      </header>
+
+      <main className="flex-grow pt-14 md:pt-[72px]">
+        <Outlet />
+      </main>
+
+      <footer className="w-full py-4 bg-background text-center text-muted-foreground text-sm">
+        <p>© 2024 Receitas de Pastel. Todos os direitos reservados.</p>
+      </footer>
+    </div>
   )
 }
