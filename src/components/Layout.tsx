@@ -8,7 +8,7 @@ export default function Layout() {
           to="/"
           className="text-h3-mobile md:text-h2-desktop font-display text-foreground transition-transform duration-200 ease-in-out hover:scale-102"
         >
-          Receita de Pastel
+          pastel de gue
         </Link>
       </header>
 
