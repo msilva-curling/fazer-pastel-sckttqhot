@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import {
@@ -18,13 +18,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { steps } from '@/data/recipe'
+import { recipes } from '@/data/recipe'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import NotFound from './NotFound'
 
 const PreparationPage = () => {
+  const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [isCompleted, setIsCompleted] = useState(false)
+
+  const recipe = recipes.find((r) => r.slug === slug)
+
+  if (!recipe) {
+    return <NotFound />
+  }
+
+  const { steps } = recipe
   const totalSteps = steps.length
   const stepData = steps[currentStep]
 
@@ -98,12 +108,11 @@ const PreparationPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Parabéns! Receita Concluída!</AlertDialogTitle>
             <AlertDialogDescription>
-              Você preparou um delicioso Pastel Tradicional Brasileiro. Bom
-              apetite!
+              Você preparou um delicioso {recipe.name}. Bom apetite!
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => navigate('/')}>
+            <AlertDialogAction onClick={() => navigate(`/receita/${slug}`)}>
               Voltar para Visão Geral
             </AlertDialogAction>
           </AlertDialogFooter>

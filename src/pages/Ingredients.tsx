@@ -1,14 +1,22 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ingredients, IngredientCategory } from '@/data/recipe'
+import { recipes, IngredientCategory } from '@/data/recipe'
 import { cn } from '@/lib/utils'
+import NotFound from './NotFound'
 
 const IngredientsPage = () => {
+  const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
+
+  const recipe = recipes.find((r) => r.slug === slug)
+
+  if (!recipe) {
+    return <NotFound />
+  }
 
   const handleCheckboxChange = (id: string) => {
     setCheckedItems((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -31,7 +39,7 @@ const IngredientsPage = () => {
             <label
               htmlFor={item.id}
               className={cn(
-                'text-body-mobile md:text-body-desktop text-muted-foreground transition-all',
+                'text-body-mobile md:text-body-desktop text-muted-foreground transition-all cursor-pointer',
                 {
                   'line-through opacity-70 text-foreground':
                     checkedItems[item.id],
@@ -54,11 +62,11 @@ const IngredientsPage = () => {
       <Card className="bg-card shadow-card border-none">
         <CardHeader>
           <CardTitle className="text-h2-mobile md:text-h2-desktop text-center font-display">
-            Ingredientes para o Pastel
+            Ingredientes para o {recipe.name}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 md:p-8">
-          {ingredients.map(renderCategory)}
+          {recipe.ingredients.map(renderCategory)}
           <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
             <Button
               variant="outline"
@@ -66,11 +74,11 @@ const IngredientsPage = () => {
               asChild
               className="transition-all duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground hover:border-primary"
             >
-              <Link to="/">Voltar</Link>
+              <Link to={`/receita/${slug}`}>Voltar</Link>
             </Button>
             <Button
               size="lg"
-              onClick={() => navigate('/preparo')}
+              onClick={() => navigate(`/receita/${slug}/preparo`)}
               className="bg-primary text-primary-foreground transition-all duration-200 ease-in-out hover:bg-yellow-500 hover:scale-102 shadow-lg"
             >
               Começar a Cozinhar
